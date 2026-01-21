@@ -1,0 +1,27 @@
+%% https://mermaid.live/
+
+flowchart TD
+    A[User Query] --> B{Is English?}
+    B -- No --> C[LLM: Translate to English]
+    B -- Yes --> D[Use Original Query]
+
+    C --> E[English Query]
+    D --> E[English Query]
+
+    E --> F[LLM: Embed Query]
+    F --> G[Retrieve TopK from Qdrant]
+
+    G --> H{Enable Rerank?}
+    H -- Yes --> I[LLM: Rerank<br>Select Top_k_use]
+    H -- No --> J[Select First Top_k_use]
+
+    I --> K[Final Context]
+    J --> K[Final Context]
+
+    K --> L["Load History from Redis:<br>  (app/user/session)"]
+    L --> M[Build Prompt:<br>History + Context + Query]
+
+    M --> N[Chat LLM]
+    N --> O[Return Answer]
+
+    O --> P[Save to Redis:<br>Query + Answer + Time]
