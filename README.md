@@ -12,11 +12,25 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 - **Simple GUI for quick testing** that uses the Core API as its backend
 - **Pluggable LLM providers** (local and remote)
 - **Qdrant-based vector search** with multiple data source options
+- **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
 - **Designed for production** (Linux-first, Windows-friendly for development)
 - **Redis Integration** Conversation history (app_id / user_id / session_id)
 - **Flexible Ingestion** CSV (Fields Extracts) , TXT (Paragraph-based chunking)
 - **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
-
+- **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
+```bash
+User query
+   ↓
+Load last N Redis turns (e.g., 2–3)
+   ↓
+Rewrite LLM (prompt above)
+   ↓
+Rewritten query
+   ↓
+Embedding
+   ↓
+Qdrant
+```
 
 ---
 
@@ -89,20 +103,7 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API.
 - **PostgreSQL Data Source**
   - Index relational data into **Qdrant**
   - Enables RAG over structured datasets
-- **Rewrite Prompt**
-```bash
-User query
-   ↓
-Load last N Redis turns (e.g., 2–3)
-   ↓
-Rewrite LLM (prompt above)
-   ↓
-Rewritten query
-   ↓
-Embedding
-   ↓
-Qdrant
-```
+
 ---
 ## 📦 Vector Store
 
@@ -124,7 +125,7 @@ The system is configured via:
 
 This allows you to:
 - Switch LLM providers
-- Change embedding models
+- Change chat, embedding, translate and  rewrite models
 - Toggle rewrite prompt logic
 - Select data sources
   
@@ -218,6 +219,17 @@ GET http://localhost:8000/ping/qdrantWithInfo
 
 ---
 
+## ❓ Query Stream API
+
+```
+POST http://localhost:8000/query_stream
+
+{
+  "query": "who is here Father?",
+  "user_id": "local_user88777"
+}
+```
+
 ## ❓ Query API
 
 ```
@@ -230,9 +242,7 @@ POST http://localhost:8000/query
 ```
 
 ---
-## FlowChart: RAG Qdrant History
-![Main Window](images/FlowChart.PNG)
----
+
 ## GUI Windows
 #### Main Window
 
