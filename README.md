@@ -104,6 +104,17 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API.
   - Index relational data into **Qdrant**
   - Enables RAG over structured datasets
 
+- **Qdrant Multi-Vector Image Retrieval (Visual RAG)**
+- Index images, PDFs, and document pages using **multi-vector embeddings**
+- Patch-level retrieval via **late interaction (MaxSim)**
+- Powered by **ColPali-style vision–text encoders**
+- Enables **Visual RAG** over:
+  - Scanned documents
+  - Diagrams & charts
+  - UI screenshots
+  - Image-based knowledge bases
+- Designed to integrate with OCR pipelines for **image → text → LLM augmentation**
+  
 ---
 ## 📦 Vector Store
 
