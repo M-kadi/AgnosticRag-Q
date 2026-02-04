@@ -33,7 +33,55 @@ Embedding
    ↓
 Qdrant
 ```
-
+---
+- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
+```bash
+{
+  "api_base_url": "http://localhost:8000",
+  "qdrant_url": "http://localhost:6333",
+  "collection_prefix": "claims_hybridC",
+  "topk_retrieve": 10,
+  "topk_use": 3,
+  "enable_rerank": false,
+  "text_group_lines": 1,
+  "txt_chunk_chars": 900,
+  "txt_overlap": 120,
+  "batch_size": 64,
+  "is_paragraph_enable": false,
+  "paragraph_end_str": "",
+  "include_marker": false,
+  "marker_contains": false,
+  "enable_structured_csv_lookup": false,
+  "enable_exact_filter_first": false,
+  "enable_qdrant_hybrid_search_csv": true,
+  "docs_dir": "D:\\LLM\\LLM_Tests\\LLMs_Tests\\RAG\\AgnosticRag-Q-R\\rag_data\\my_csvs\\docs",
+  "rerank_prompt_template": "You are a retrieval re-ranker.\nGiven a user question and a list of candidate contexts, select the most relevant items.\nRules:\n- Choose exactly {choose_k} distinct indices.\n- Prefer contexts that directly contain facts needed to answer.\n- Avoid redundant/duplicate contexts.\n- Output ONLY valid JSON, no extra text.\n\nReturn JSON format:\n{{\n  \"selected_indices\": [0, 2, 5],\n  \"reasons\": [\"short reason 1\", \"short reason 2\", \"short reason 3\"]\n}}\n\nQuestion:\n{query}\n\nCandidates:\n{candidates}",
+  "answer_prompt_template": "You are an assistant that answers strictly from retrieved context.\n\nIMPORTANT RULES:\n- Use ONLY the information in the Context.\n- First, check if there is an EXACT match to the Question (all provided key=value pairs) in a single Context row.\n- If there is an exact match:\n  - Output ONLY the value of Initial_ActivityDenialCode from that row.\n- If there is NO exact match but Context is not empty:\n  - Output:\n    Closest match (not exact).\n  - List differing fields (requested vs found).\n  - Then output ONLY the value of Initial_ActivityDenialCode from the closest-match row (the highest score row).\n- If Context is empty:\n  - Reply exactly: \"I don't know based on the provided context.\"\n- Do NOT add any other text.\n\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer:",
+  "translate_prompt_template": "You are a translation engine.\n\n    Task:\n    - Translate the user text into natural English.\n    Rules:\n    - Output ONLY the English translation.\n    - No explanations, no quotes, no extra text.\n    - Keep proper nouns, IDs, emails, URLs, and numbers unchanged.\n    - If the text is already English, output it unchanged.\n\n    User text:\n    {text}",
+  "rewrite_prompt_template": "You are a query rewriting assistant for a retrieval-augmented generation (RAG) system.\n\nYour job is to rewrite the user's current message into a single, clear, standalone search query\nthat can be used to retrieve documents from a vector database.\n\nRules:\n- Use the conversation only to resolve references (e.g. \"it\", \"that\", \"the second one\").\n- Do NOT introduce new topics.\n- Do NOT answer the user.\n- Do NOT include chatty or conversational text.\n- Output ONLY the rewritten search query.\n- If the user query is already clear and standalone, return it unchanged.\n\nRecent conversation:\n{history}\n\nCurrent user question:\n{query}\n\nRewrite this into one concise standalone retrieval query.",
+  "enable_auto_translate": false,
+  "enable_rewrite": false,
+  "embedding_model": "mxbai-embed-large:latest",
+  "main_model": "gemini-2.0-flash",
+  "translate_model": "qwen3:1.7b",
+  "rewrite_model": "gemini-2.0-flash",
+  "main_provider": "gemini",
+  "embedding_provider": "ollama",
+  "translate_provider": "ollama",
+  "rewrite_provider": "gemini",
+  "env_path": "D:\\LLM\\LLM_Tests\\keys.env",
+  "redis_url": "redis://localhost:6381",
+  "redis_store": "redis_store",
+  "redis_prefix": "rag",
+  "app_id": "rag_api",
+  "session_id": "default",
+  "user_id": "local_user858",
+  "history_turns": 5,
+  "history_rewrite_turns": 2,
+  "history_max_turns": 2000,
+  "history_ttl_seconds": 604800
+}
+```
 ---
 
 ## 🧠 Architecture Overview
