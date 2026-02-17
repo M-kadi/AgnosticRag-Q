@@ -6,6 +6,14 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 
 ---
 
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=GIbtlLuHlyg">
+    <img src="https://img.youtube.com/vi/GIbtlLuHlyg/maxresdefault.jpg" width="800">
+  </a>
+</p>
+
+---
+
 ## ✨ Key Highlights
 
 - **Core RAG API** built with a clean, extensible architecture
