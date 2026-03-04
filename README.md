@@ -24,8 +24,10 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 - **Qdrant-based vector search** with multiple data source options
 - **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
 - **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV (Fields Extracts) , TXT (Paragraph-based chunking) 
-- **Simple GUI for quick testing** that uses the Core API as its backend
+- **Flexible Ingestion** CSV (Fields Extracts) , TXT (Paragraph-based chunking)
+- **Multi-vector image retrieval** using **ColQwen / ColPali**
+- Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+- **Simple UI for quick testing** that uses the Core API as its backend
 ---
 - **Rewrite Prompt**
 ```bash
@@ -47,9 +49,9 @@ Qdrant
 {
   "api_base_url": "http://localhost:8000",
   "qdrant_url": "http://localhost:6333",
-  "collection_prefix": "claims_hybridC",
+  "collection_prefix": "EyadAsil",
   "topk_retrieve": 10,
-  "topk_use": 3,
+  "topk_use": 5,
   "enable_rerank": false,
   "text_group_lines": 1,
   "txt_chunk_chars": 900,
@@ -61,29 +63,31 @@ Qdrant
   "marker_contains": false,
   "enable_structured_csv_lookup": false,
   "enable_exact_filter_first": false,
-  "enable_qdrant_hybrid_search_csv": true,
-  "docs_dir": "D:\\LLM\\LLM_Tests\\LLMs_Tests\\RAG\\AgnosticRag-Q-R\\rag_data\\my_csvs\\docs",
+  "enable_qdrant_hybrid_search_csv": false,
+  "enable_muvera_for_multi_vector_image": true,
+  "use_muvera_for_multi_vector_image": false,
+  "docs_dir": "rag_data\\my_csvs\\docs",
   "rerank_prompt_template": "You are a retrieval re-ranker.\nGiven a user question and a list of candidate contexts, select the most relevant items.\nRules:\n- Choose exactly {choose_k} distinct indices.\n- Prefer contexts that directly contain facts needed to answer.\n- Avoid redundant/duplicate contexts.\n- Output ONLY valid JSON, no extra text.\n\nReturn JSON format:\n{{\n  \"selected_indices\": [0, 2, 5],\n  \"reasons\": [\"short reason 1\", \"short reason 2\", \"short reason 3\"]\n}}\n\nQuestion:\n{query}\n\nCandidates:\n{candidates}",
   "answer_prompt_template": "You are an assistant that answers strictly from retrieved context.\n\nIMPORTANT RULES:\n- Use ONLY the information in the Context.\n- First, check if there is an EXACT match to the Question (all provided key=value pairs) in a single Context row.\n- If there is an exact match:\n  - Output ONLY the value of Initial_ActivityDenialCode from that row.\n- If there is NO exact match but Context is not empty:\n  - Output:\n    Closest match (not exact).\n  - List differing fields (requested vs found).\n  - Then output ONLY the value of Initial_ActivityDenialCode from the closest-match row (the highest score row).\n- If Context is empty:\n  - Reply exactly: \"I don't know based on the provided context.\"\n- Do NOT add any other text.\n\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer:",
   "translate_prompt_template": "You are a translation engine.\n\n    Task:\n    - Translate the user text into natural English.\n    Rules:\n    - Output ONLY the English translation.\n    - No explanations, no quotes, no extra text.\n    - Keep proper nouns, IDs, emails, URLs, and numbers unchanged.\n    - If the text is already English, output it unchanged.\n\n    User text:\n    {text}",
   "rewrite_prompt_template": "You are a query rewriting assistant for a retrieval-augmented generation (RAG) system.\n\nYour job is to rewrite the user's current message into a single, clear, standalone search query\nthat can be used to retrieve documents from a vector database.\n\nRules:\n- Use the conversation only to resolve references (e.g. \"it\", \"that\", \"the second one\").\n- Do NOT introduce new topics.\n- Do NOT answer the user.\n- Do NOT include chatty or conversational text.\n- Output ONLY the rewritten search query.\n- If the user query is already clear and standalone, return it unchanged.\n\nRecent conversation:\n{history}\n\nCurrent user question:\n{query}\n\nRewrite this into one concise standalone retrieval query.",
   "enable_auto_translate": false,
   "enable_rewrite": false,
-  "embedding_model": "mxbai-embed-large:latest",
-  "main_model": "gemini-2.0-flash",
+  "embedding_model": "vidore/colqwen2-v1.0",
+  "main_model": "gpt-4o-mini",
   "translate_model": "qwen3:1.7b",
-  "rewrite_model": "gemini-2.0-flash",
-  "main_provider": "gemini",
-  "embedding_provider": "ollama",
+  "rewrite_model": "gpt-4o-mini",
+  "main_provider": "openai",
+  "embedding_provider": "colqwen",
   "translate_provider": "ollama",
-  "rewrite_provider": "gemini",
-  "env_path": "D:\\LLM\\LLM_Tests\\keys.env",
+  "rewrite_provider": "openai",
+  "env_path": "keys.env",
   "redis_url": "redis://localhost:6381",
   "redis_store": "redis_store",
   "redis_prefix": "rag",
-  "app_id": "rag_api",
-  "session_id": "default",
-  "user_id": "local_user858",
+  "app_id": "rag_api1",
+  "session_id": "defaault1",
+  "user_id": "local_user1",
   "history_turns": 5,
   "history_rewrite_turns": 2,
   "history_max_turns": 2000,
@@ -102,7 +106,7 @@ Core RAG API (FastAPI)
 RAG Engine
    ├── LLM Providers (Transformers, vLLM, Ollama, OpenAI, ...)
    ├── Vector Store (Qdrant)
-   └── Data Sources (Txt, CSV)
+   └── Data Sources (Txt, CSV, Images)
 ```
 
 - **Core API**: Handles retrieval, prompt construction, history, and inference.
@@ -147,12 +151,14 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API, this 
 - **Ollama** (local)
 - **OpenAI** (remote)
 - **Gemini** (remote)
+- **ColPali** (image)
+- **ColQwen** (remote)
 
 ---
 
 ## 🔮 Incoming Features
 
-- **Qdrant Multi-Vector Image Retrieval (Visual RAG)**
+- **Qdrant Multi-Vector Image Retrieval (Visual RAG)**  --  **In Progress..**
    - Index images, PDFs, and document pages using **multi-vector embeddings**
    - Patch-level retrieval via **late interaction (MaxSim)**
    - Powered by **ColPali-style vision–text encoders**
