@@ -28,7 +28,17 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 - **Multi-vector image retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
 - **Simple UI for quick testing** that uses the Core API as its backend
+
 ---
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=8koN_m8l39s">
+    <img src="https://img.youtube.com/vi/8koN_m8l39s/maxresdefault.jpg" width="800">
+  </a>
+</p>
+
+---
+
 - **Rewrite Prompt**
 ```bash
 User query
