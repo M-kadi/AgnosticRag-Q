@@ -296,22 +296,22 @@ POST http://localhost:8000/query
 ---
 
 ## GUI Windows
-#### Main Window
+#### Main Window : Search in txt Files
 
 ![Main Window](images/Main.PNG)
 
   ---
-#### Main Window
+#### Main Window : Search in csv Files Tables
 
 ![Main Window2](images/Main2.PNG)
 
   ---
-#### Main Window
+#### Main Window : Search in Images by text query
 
 ![Main Window3](images/Main3.PNG)
 
   ---
-#### Main Window
+#### Main Window : Search in Images by image query
 
 ![Main Window4](images/Main4.PNG)
 
