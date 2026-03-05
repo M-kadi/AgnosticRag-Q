@@ -5,6 +5,7 @@ AgnosticRag-Q is a cloud agnostic and LLM agnnostic **Retrieval-Augmented Genera
 The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, and data sources without rewriting business logic.
 
 ---
+Full RAG with translation
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=GIbtlLuHlyg">
@@ -30,6 +31,7 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 - **Simple UI for quick testing** that uses the Core API as its backend
 
 ---
+Full RAG with Medical Data csv Table
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=8koN_m8l39s">
@@ -302,6 +304,16 @@ POST http://localhost:8000/query
 #### Main Window
 
 ![Main Window2](images/Main2.PNG)
+
+  ---
+#### Main Window
+
+![Main Window3](images/Main3.PNG)
+
+  ---
+#### Main Window
+
+![Main Window4](images/Main4.PNG)
 
   ---  
 #### Results Window
