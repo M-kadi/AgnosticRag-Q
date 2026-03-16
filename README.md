@@ -25,10 +25,19 @@ Full RAG with translation
 - **Qdrant-based vector search** with multiple data source options
 - **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
 - **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV (Fields Extracts) , TXT (Paragraph-based chunking)
-- **Multi-vector image retrieval** using **ColQwen / ColPali**
+- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking)
+- **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
 - **Simple UI for quick testing** that uses the Core API as its backend
+
+---
+Full RAG With Images/PDFs
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=aKKh4YvL17s">
+    <img src="https://img.youtube.com/vi/aKKh4YvL17s/maxresdefault.jpg" width="800">
+  </a>
+</p>
 
 ---
 Full RAG with Medical Data csv Table
