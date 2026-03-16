@@ -35,7 +35,7 @@ Full RAG With Images/PDFs
 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=aKKh4YvL17s">
-    <img src="https://img.youtube.com/vi/aKKh4YvL17s/maxresdefault.jpg" width="800">
+    <img src="./images/Main4.PNG" width="800" alt="Full RAG With Images/PDFs">
   </a>
 </p>
 
