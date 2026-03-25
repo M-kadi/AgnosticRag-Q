@@ -25,9 +25,12 @@ Full RAG with translation
 - **Qdrant-based vector search** with multiple data source options
 - **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
 - **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking)
+- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking), Images and Audio (Speech)
 - **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+- **Audio Search** using Whisper + CLAP with Qdrant
+- **Audio Query Support** search by uploaded audio file or text
+- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings 
 - **Simple UI for quick testing** that uses the Core API as its backend
 
 ---
@@ -102,6 +105,39 @@ Qdrant
   "embedding_provider": "colqwen",
   "translate_provider": "ollama",
   "rewrite_provider": "openai",
+  "transformer_device": "cpu",
+  "transformer_trust_remote_code": false,
+  "transformer_local_files_only": false,
+  "transformer_embedding_backend": "auto",
+  "transformer_embedding_normalize": true,
+  "transformer_embedding_max_length": 512,
+  "transformer_embedding_prompt_prefix": "query: ",
+  "transformer_chat_backend": "causal",
+  "transformer_max_new_tokens": 256,
+  "transformer_temperature": 0.0,
+  "transformer_top_p": 0.9,
+  "transformer_do_sample": false,
+  "transformer_system_prompt": "",
+  "transformer_max_input_length": 2048,
+  "audio_clap_model": "laion/clap-htsat-unfused",
+  "audio_transcript_embedding_provider": "transformer",
+  "audio_transcript_embedding_model": "intfloat/multilingual-e5-small",
+  "whisper_language": "en",
+  "whisper_beam_size": 5,
+  "whisper_vad_filter": false,
+  "whisper_vad_threshold": 0.5,
+  "whisper_word_timestamps": false,
+  "whisper_device": "cpu",
+  "whisper_compute_type": "int8",
+  "audio_target_sr": 48000,
+  "audio_whisper_sr": 16000,
+  "silero_min_silence_ms": 250,
+  "silero_speech_pad_ms": 150,
+  "silero_threshold": 0.4,
+  "silero_window_samples": 512,
+  "audio_min_chunk_seconds": 1.2,
+  "audio_max_chunk_seconds": 20.0,
+  "audio_merge_gap_ms": 300,
   "env_path": "keys.env",
   "redis_url": "redis://localhost:6381",
   "redis_store": "redis_store",
@@ -127,7 +163,7 @@ Core RAG API (FastAPI)
 RAG Engine
    ├── LLM Providers (Transformers, vLLM, Ollama, OpenAI, ...)
    ├── Vector Store (Qdrant)
-   └── Data Sources (Txt, CSV, Images)
+   └── Data Sources (Txt, CSV, Images, Audio(Speech))
 ```
 
 - **Core API**: Handles retrieval, prompt construction, history, and inference.
@@ -170,27 +206,17 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API, this 
 ### Current / Supported
 
 - **Ollama** (local)
+- **Transformer** (local)
 - **OpenAI** (remote)
 - **Gemini** (remote)
 - **ColPali** (image)
 - **ColQwen** (remote)
+- **Whisper** (local)
 
 ---
 
 ## 🔮 Incoming Features
-
-- **Qdrant Multi-Vector Image Retrieval (Visual RAG)**  --  **In Progress..**
-   - Index images, PDFs, and document pages using **multi-vector embeddings**
-   - Patch-level retrieval via **late interaction (MaxSim)**
-   - Powered by **ColPali-style vision–text encoders**
-   - Enables **Visual RAG** over:
-     - Scanned documents
-     - Diagrams & charts
-     - UI screenshots
-     - Image-based knowledge bases
-   - Designed to integrate with OCR pipelines for **image → text → LLM augmentation**
-   - Agentic RAG ( collection selection )
-     
+    
 - **Transformers provider & vLLM provider**
   - Local execution
   - Hugging Face model support
@@ -325,6 +351,11 @@ POST http://localhost:8000/query
 ![Main Window4](images/Main4.PNG)
 
   ---  
+#### Main Window : Search in Audio(Speech) by text/audio_file query
+
+![Main Window5](images/Main5.PNG)
+
+  ---    
 #### Results Window
 
 ![Results Window](images/Results.PNG)
