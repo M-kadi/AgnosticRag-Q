@@ -4,16 +4,36 @@ AgnosticRag-Q is a cloud agnostic and LLM agnnostic **Retrieval-Augmented Genera
 
 The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, and data sources without rewriting business logic.
 
----
-Full RAG with translation
-
-<p align="center">
+<table>
+  <tr>
+    <td align="center">
+      <b>Full RAG with translation</b><br>
   <a href="https://www.youtube.com/watch?v=GIbtlLuHlyg">
-    <img src="https://img.youtube.com/vi/GIbtlLuHlyg/maxresdefault.jpg" width="800">
+    <img src="https://img.youtube.com/vi/GIbtlLuHlyg/maxresdefault.jpg" width="400">
+      </a>
+    </td>
+    <td align="center">
+      <b>Full RAG With Images/PDFs</b><br>
+  <a href="https://www.youtube.com/watch?v=aKKh4YvL17s">
+    <img src="./images/Main4.PNG" width="800" alt="Full RAG With Images/PDFs">
   </a>
-</p>
-
----
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <b>Full RAG with Medical Data csv Table</b><br>
+  <a href="https://www.youtube.com/watch?v=8koN_m8l39s">
+    <img src="https://img.youtube.com/vi/8koN_m8l39s/maxresdefault.jpg" width="800">
+  </a>
+    </td>
+    <td align="center">
+      <b>Full RAG with Images : Search by an image or text</b><br>
+  <a href="https://www.youtube.com/watch?v=BzggFYE44i8">
+    <img src="https://img.youtube.com/vi/BzggFYE44i8/maxresdefault.jpg" width="400">
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## ✨ Key Highlights
 
@@ -32,24 +52,6 @@ Full RAG with translation
 - **Audio Query Support** search by uploaded audio file or text
 - **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings 
 - **Simple UI for quick testing** that uses the Core API as its backend
-
----
-Full RAG With Images/PDFs
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=aKKh4YvL17s">
-    <img src="./images/Main4.PNG" width="800" alt="Full RAG With Images/PDFs">
-  </a>
-</p>
-
----
-Full RAG with Medical Data csv Table
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=8koN_m8l39s">
-    <img src="https://img.youtube.com/vi/8koN_m8l39s/maxresdefault.jpg" width="800">
-  </a>
-</p>
 
 ---
 
