@@ -33,6 +33,17 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
       </a>
     </td>
   </tr>
+  <tr>
+    <td align="center">
+      <b>Visual search AgnosticRAG</b><br>
+  <a href="https://www.youtube.com/watch?v=-IU3sSE7fD8">
+    <img src="https://img.youtube.com/vi/-IU3sSE7fD8/maxresdefault.jpg" width="800">
+  </a>
+    </td>
+    
+
+    </td>
+  </tr>  
 </table>
 
 ## ✨ Key Highlights
