@@ -1,6 +1,6 @@
 # AgnosticRag-Q
 
-AgnosticRag-Q is a cloud agnostic and LLM agnnostic **Retrieval-Augmented Generation (RAG) platform** designed with a clean architecture. It provides a **Core RAG API** and a **GUI application** that consumes this backend, allowing you to experiment, extend, and deploy RAG pipelines with multiple LLM providers and data sources.
+AgnosticRag-Q is a cloud agnostic and LLM agnnostic **Retrieval-Augmented Generation (RAG) platform** designed with a clean architecture. supporting Text, CSV, Images, and Audio with hybrid search, multimodal retrieval, and configurable runtime behavior. It provides a **Core RAG API** and a **GUI application** that consumes this backend, allowing you to experiment, extend, and deploy RAG pipelines with multiple LLM providers and data sources.
 
 The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, and data sources without rewriting business logic.
 
@@ -58,9 +58,19 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 - **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking), Images and Audio (Speech)
 - **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+- Supports multimodal queries: **text, image, audio, text+image, text+audio**  
 - **Audio Search** using Whisper + CLAP with Qdrant
 - **Audio Query Support** search by uploaded audio file or text
-- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings 
+- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings
+- **Built-in caching system**:
+  - In-memory **engine cache** (avoid reloading heavy models)
+  - Optional **media/query result cache** for image & audio queries
+  - Configurable cache limits and TTL for performance tuning
+- **Docker-based modular deployment**:  (Comming Soon)
+  - run separate RAG backends per modality (text / image / audio)
+  - each backend connected to its own collection or configuration
+  - UI can dynamically select the target backend (e.g., text, image, audio)
+  - enables scalable, isolated, and production-ready deployments    
 - **Simple UI for quick testing** that uses the Core API as its backend
 
 ---
@@ -85,7 +95,8 @@ Qdrant
 {
   "api_base_url": "http://localhost:8000",
   "qdrant_url": "http://localhost:6333",
-  "collection_prefix": "EyadAsil",
+  "collection_prefix": "ManyImages-",
+  "collection_name": "ManyImages-__vidore_colpali-v1.3__multivector_image__dim128__muvera",
   "topk_retrieve": 10,
   "topk_use": 5,
   "enable_rerank": false,
@@ -102,9 +113,12 @@ Qdrant
   "enable_qdrant_hybrid_search_csv": false,
   "enable_muvera_for_multi_vector_image": true,
   "use_muvera_for_multi_vector_image": false,
+  "send_images_to_final_chat_for_multi_vector_image": true,
   "docs_dir": "rag_data\\my_csvs\\docs",
   "rerank_prompt_template": "You are a retrieval re-ranker.\nGiven a user question and a list of candidate contexts, select the most relevant items.\nRules:\n- Choose exactly {choose_k} distinct indices.\n- Prefer contexts that directly contain facts needed to answer.\n- Avoid redundant/duplicate contexts.\n- Output ONLY valid JSON, no extra text.\n\nReturn JSON format:\n{{\n  \"selected_indices\": [0, 2, 5],\n  \"reasons\": [\"short reason 1\", \"short reason 2\", \"short reason 3\"]\n}}\n\nQuestion:\n{query}\n\nCandidates:\n{candidates}",
   "answer_prompt_template": "You are an assistant that answers strictly from retrieved context.\n\nIMPORTANT RULES:\n- Use ONLY the information in the Context.\n- First, check if there is an EXACT match to the Question (all provided key=value pairs) in a single Context row.\n- If there is an exact match:\n  - Output ONLY the value of Initial_ActivityDenialCode from that row.\n- If there is NO exact match but Context is not empty:\n  - Output:\n    Closest match (not exact).\n  - List differing fields (requested vs found).\n  - Then output ONLY the value of Initial_ActivityDenialCode from the closest-match row (the highest score row).\n- If Context is empty:\n  - Reply exactly: \"I don't know based on the provided context.\"\n- Do NOT add any other text.\n\nContext:\n{context}\n\nQuestion:\n{query}\n\nAnswer:",
+  "answer_prompt_template_image": "  You are an assistant that answers the user's question based on retrieved image(s) and recent conversation history.\n  \n  The retrieved images are provided as attachments alongside this prompt.\n\n  Rules:\n  - For questions about the images, answer using the visual content of the attached images.\n  - For meta-questions about the conversation (e.g. \\\"what did I just ask?\\\"), answer from the Conversation history below.\n  - If the images do not contain enough information to answer, reply exactly: \\\"I don't know based on the retrieved images.\\\"\n  - Keep the answer clear and concise.\\n\\nConversation history (most recent last):\n  {history}\n  \n  Retrieved image references (for traceability):\n  {context}\n  \n  Question: {query}\n  \n  Answer:",
+  "answer_prompt_template_audio": "You are an assistant that answers using BOTH the retrieved context and the recent conversation history.\n\nIMPORTANT RULES:\n- Prefer the Context for factual answers.\n- Use History only for continuity (follow-ups, pronouns).\n- DO NOT repeat the question.\n- DO NOT hallucinate or add information not present in the Context.\n- If the answer is not found in Context, reply exactly:\n  \"I don't know based on the provided context.\"\n\nOUTPUT FORMAT (STRICT):\n\n1) First: provide a clean and concise answer.\n2) Then: append the section EXACTLY as shown below.\n\nAssistant:\n<final answer>\n\nSelected Context:\n<context exactly as provided below, DO NOT modify, DO NOT summarize, DO NOT reorder>\n\n---\n\nHistory (last turns):\n{history}\n\nContext:\n{context}\n\nQuestion: {query}\n\nAnswer:",
   "translate_prompt_template": "You are a translation engine.\n\n    Task:\n    - Translate the user text into natural English.\n    Rules:\n    - Output ONLY the English translation.\n    - No explanations, no quotes, no extra text.\n    - Keep proper nouns, IDs, emails, URLs, and numbers unchanged.\n    - If the text is already English, output it unchanged.\n\n    User text:\n    {text}",
   "rewrite_prompt_template": "You are a query rewriting assistant for a retrieval-augmented generation (RAG) system.\n\nYour job is to rewrite the user's current message into a single, clear, standalone search query\nthat can be used to retrieve documents from a vector database.\n\nRules:\n- Use the conversation only to resolve references (e.g. \"it\", \"that\", \"the second one\").\n- Do NOT introduce new topics.\n- Do NOT answer the user.\n- Do NOT include chatty or conversational text.\n- Output ONLY the rewritten search query.\n- If the user query is already clear and standalone, return it unchanged.\n\nRecent conversation:\n{history}\n\nCurrent user question:\n{query}\n\nRewrite this into one concise standalone retrieval query.",
   "enable_auto_translate": false,
@@ -118,19 +132,26 @@ Qdrant
   "translate_provider": "ollama",
   "rewrite_provider": "openai",
   "transformer_device": "cpu",
-  "transformer_trust_remote_code": false,
+  "transformer_trust_remote_code": true,
   "transformer_local_files_only": false,
+  "transformer_embedding_trust_remote_code": false,
+  "transformer_embedding_local_files_only": false,
   "transformer_embedding_backend": "auto",
   "transformer_embedding_normalize": true,
   "transformer_embedding_max_length": 512,
   "transformer_embedding_prompt_prefix": "query: ",
+  "transformer_embedding_model_path": "",
   "transformer_chat_backend": "causal",
-  "transformer_max_new_tokens": 256,
+  "transformer_chat_model_path": "",
+  "transformer_chat_prompt": "{joined}",
+  "transformer_max_new_tokens": 128,
   "transformer_temperature": 0.0,
   "transformer_top_p": 0.9,
   "transformer_do_sample": false,
   "transformer_system_prompt": "",
   "transformer_max_input_length": 2048,
+  "audio_clap_enable": false,
+  "enable_text_transcript_audio_one_search_qdrant": false,
   "audio_clap_model": "laion/clap-htsat-unfused",
   "audio_transcript_embedding_provider": "transformer",
   "audio_transcript_embedding_model": "intfloat/multilingual-e5-small",
