@@ -66,7 +66,7 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
   - In-memory **engine cache** (avoid reloading heavy models)
   - Optional **media/query result cache** for image & audio queries
   - Configurable cache limits and TTL for performance tuning
-- **Docker-based modular deployment**:  (Comming Soon)
+- **Docker-based modular deployment**:
   - run separate RAG backends per modality (text / image / audio)
   - each backend connected to its own collection or configuration
   - UI can dynamically select the target backend (e.g., text, image, audio)
