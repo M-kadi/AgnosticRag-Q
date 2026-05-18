@@ -54,6 +54,10 @@ Future support for `AgnosticRagMCP` extends the platform with MCP-based external
   </a>
     </td>    
     <td align="center">
+      <b>Search in TXT and CSV using AgnosticRagRouter</b><br>
+  <a href="https://www.youtube.com/watch?v=fOU6PBjQch8">
+    <img src="https://img.youtube.com/vi/fOU6PBjQch8/maxresdefault.jpg" width="800">
+  </a>
     </td>
   </tr>  
 </table>
