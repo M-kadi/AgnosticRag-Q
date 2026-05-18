@@ -126,6 +126,7 @@ Qdrant
   "enable_structured_csv_lookup": false,
   "enable_exact_filter_first": false,
   "enable_qdrant_hybrid_search_csv": false,
+  "use_qdrant_hybrid_search_csv": false,
   "enable_muvera_for_multi_vector_image": true,
   "use_muvera_for_multi_vector_image": false,
   "send_images_to_final_chat_for_multi_vector_image": true,
@@ -206,6 +207,8 @@ Qdrant
 ```
 GUI (Web / Desktop)
    ↓
+AgnosticRagRouter (Optional)
+   ↓
 Core RAG API (FastAPI)
    ↓
 RAG Engine
@@ -215,6 +218,7 @@ RAG Engine
 ```
 
 - **Core API**: Handles retrieval, prompt construction, history, and inference.
+- **AgnosticRagRouter**: Intelligent LLM-based routing and multi-backend orchestration.
 - **GUI**: Thin client that communicates only with the Core API to generate the config file ( helful for developers).
 - **LLM Providers**: Swappable components selected via configuration.
   
@@ -234,6 +238,27 @@ It can be used:
 - Directly as an API (FastAPI)
 - As a backend for the provided GUI
 - As a base for custom applications
+
+---
+
+## 🧠 AgnosticRagRouter
+
+AgnosticRagRouter is an intelligent routing layer for multi-backend RAG systems.
+
+It is responsible for:
+
+- LLM-based backend selection
+- Query routing across multiple RAG backends
+- Multi-domain orchestration
+- Dynamic backend dispatching
+
+Example:
+- Text RAG backend
+- CSV / Medical backend
+- Image RAG backend
+- Audio RAG backend
+
+The router can automatically select the most relevant backend depending on the user query.
 
 ---
 
