@@ -1,8 +1,21 @@
 # AgnosticRag-Q
 
-AgnosticRag-Q is a cloud agnostic and LLM agnnostic **Retrieval-Augmented Generation (RAG) platform** designed with a clean architecture. supporting Text, CSV, Images, and Audio with hybrid search, multimodal retrieval, and configurable runtime behavior. It provides a **Core RAG API** and a **GUI application** that consumes this backend, allowing you to experiment, extend, and deploy RAG pipelines with multiple LLM providers and data sources.
+AgnosticRag-Q is a cloud agnostic and LLM agnostic **Retrieval-Augmented Generation (RAG) platform** designed with a clean architecture, supporting Text, CSV, Images, and Audio with hybrid search, multimodal retrieval, intelligent routing, and configurable runtime behavior.
 
-The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, and data sources without rewriting business logic.
+It provides:
+- a **Core RAG API**
+- an intelligent routing layer (**AgnosticRagRouter**)
+- and a **GUI application** that consumes these backends
+
+allowing you to experiment, extend, and deploy scalable multi-backend RAG pipelines with multiple LLM providers and data sources.
+
+The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, embedding providers, and retrieval strategies without rewriting business logic.
+
+`AgnosticRagRouter` introduces an Agentic-AI style orchestration layer that automatically selects the most relevant backend/collection (TXT, CSV, image, audio, medical, etc.) using LLM-based routing and configurable routing strategies.
+
+The platform is designed for **modular deployment**, where multiple RAG backends can run independently (text, image, audio, CSV, domain-specific collections), while the router dynamically dispatches user queries to the best backend.
+
+Future support for `AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Google Drive, WhatsApp, Telegram, and custom enterprise connectors.
 
 <table>
   <tr>
@@ -45,33 +58,103 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
   </tr>  
 </table>
 
-## ✨ Key Highlights
+# ✨ Key Highlights
 
 - **Core RAG API** built with a clean, extensible architecture
-- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
-- **Pluggable LLM providers** (local and remote) 
-- **Horisontal Scalable** (cloud / on-prem)
-- **Redis based** Conversation history (app_id / user_id / session_id)  
+
+- **AgnosticRagRouter**
+  - Intelligent backend routing
+  - Agentic-AI style orchestration
+  - LLM-based backend/collection selection
+  - Multi-backend query dispatching
+  - Supports domain-specific RAG backends
+
+- **Config-Driven** `rag_settings.json`
+  - models
+  - rerank
+  - chunking
+  - prompts
+  - routing behavior
+
+- **Pluggable LLM providers** (local and remote)
+
+- **Horizontal Scalable** (cloud / on-prem)
+
+- **Redis based Conversation History**
+  - `app_id`
+  - `user_id`
+  - `session_id`
+
 - **Qdrant-based vector search** with multiple data source options
-- **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
-- **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking), Images and Audio (Speech)
-- **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
-- Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
-- Supports multimodal queries: **text, image, audio, text+image, text+audio**  
-- **Audio Search** using Whisper + CLAP with Qdrant
-- **Audio Query Support** search by uploaded audio file or text
-- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings
-- **Built-in caching system**:
-  - In-memory **engine cache** (avoid reloading heavy models)
-  - Optional **media/query result cache** for image & audio queries
-  - Configurable cache limits and TTL for performance tuning
-- **Docker-based modular deployment**:
-  - run separate RAG backends per modality (text / image / audio)
-  - each backend connected to its own collection or configuration
-  - UI can dynamically select the target backend (e.g., text, image, audio)
-  - enables scalable, isolated, and production-ready deployments    
-- **Simple UI for quick testing** that uses the Core API as its backend
+
+- **Qdrant-Hybrid search**
+  - BM25 (sparse)
+  - Dense embeddings
+
+- **Rewrite Prompt**
+  - Create standalone retrieval query
+  - Uses final query + short history
+
+- **Flexible Ingestion**
+  - CSV (tables / field extraction)
+  - TXT (paragraph-based chunking)
+  - Images
+  - Audio (speech)
+
+- **Multi-vector image/pdf retrieval**
+  - ColQwen
+  - ColPali
+  - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+
+- Supports multimodal queries:
+  - text
+  - image
+  - audio
+  - text + image
+  - text + audio
+
+- **Audio Search**
+  - Whisper transcription
+  - CLAP embeddings
+  - Qdrant retrieval
+
+- **Audio Query Support**
+  - Search by uploaded audio file
+  - Search by text
+
+- **Hybrid Audio Transcript Search**
+  - BM25 (sparse)
+  - Dense embeddings
+
+- **Built-in caching system**
+  - In-memory engine cache
+  - Optional media/query cache
+  - Configurable cache limits and TTL
+
+- **Docker-based modular deployment**
+  - Run separate RAG backends per modality
+  - Isolated collections/configurations
+  - Scalable production-ready deployment
+  - GUI/backend dynamic selection
+
+- **Runtime backend switching**
+  - GUI can dynamically select:
+    - text backend
+    - image backend
+    - audio backend
+    - router backend
+
+- **Simple UI for quick testing**
+  - Tkinter desktop GUI
+  - Angular frontend
+  - Uses Core API / Router as backend
+
+- Future **AgnosticRagMCP** support
+  - Google Drive tools
+  - WhatsApp tools
+  - Telegram tools
+  - MCP server integration
+  - External AI tool orchestration
 
 ---
 
