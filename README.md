@@ -555,6 +555,11 @@ POST http://localhost:8000/query
 
 ![Main Window5](images/Main5.PNG)
 
+  ---  
+#### Main Window : Search in TXT and CSV using AgnosticRagRouter
+
+![Main Window6](images/Main6.PNG)
+
   ---    
 #### Results Window
 
