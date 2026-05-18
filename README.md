@@ -58,103 +58,35 @@ Future support for `AgnosticRagMCP` extends the platform with MCP-based external
   </tr>  
 </table>
 
-# ✨ Key Highlights
+## ✨ Key Highlights
 
 - **Core RAG API** built with a clean, extensible architecture
-
-- **AgnosticRagRouter**
-  - Intelligent backend routing
-  - Agentic-AI style orchestration
-  - LLM-based backend/collection selection
-  - Multi-backend query dispatching
-  - Supports domain-specific RAG backends
-
-- **Config-Driven** `rag_settings.json`
-  - models
-  - rerank
-  - chunking
-  - prompts
-  - routing behavior
-
-- **Pluggable LLM providers** (local and remote)
-
-- **Horizontal Scalable** (cloud / on-prem)
-
-- **Redis based Conversation History**
-  - `app_id`
-  - `user_id`
-  - `session_id`
-
+- **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
+- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
+- **Pluggable LLM providers** (local and remote) 
+- **Horisontal Scalable** (cloud / on-prem)
+- **Redis based** Conversation history (app_id / user_id / session_id)  
 - **Qdrant-based vector search** with multiple data source options
-
-- **Qdrant-Hybrid search**
-  - BM25 (sparse)
-  - Dense embeddings
-
-- **Rewrite Prompt**
-  - Create standalone retrieval query
-  - Uses final query + short history
-
-- **Flexible Ingestion**
-  - CSV (tables / field extraction)
-  - TXT (paragraph-based chunking)
-  - Images
-  - Audio (speech)
-
-- **Multi-vector image/pdf retrieval**
-  - ColQwen
-  - ColPali
-  - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
-
-- Supports multimodal queries:
-  - text
-  - image
-  - audio
-  - text + image
-  - text + audio
-
-- **Audio Search**
-  - Whisper transcription
-  - CLAP embeddings
-  - Qdrant retrieval
-
-- **Audio Query Support**
-  - Search by uploaded audio file
-  - Search by text
-
-- **Hybrid Audio Transcript Search**
-  - BM25 (sparse)
-  - Dense embeddings
-
-- **Built-in caching system**
-  - In-memory engine cache
-  - Optional media/query cache
-  - Configurable cache limits and TTL
-
-- **Docker-based modular deployment**
-  - Run separate RAG backends per modality
-  - Isolated collections/configurations
-  - Scalable production-ready deployment
-  - GUI/backend dynamic selection
-
-- **Runtime backend switching**
-  - GUI can dynamically select:
-    - text backend
-    - image backend
-    - audio backend
-    - router backend
-
-- **Simple UI for quick testing**
-  - Tkinter desktop GUI
-  - Angular frontend
-  - Uses Core API / Router as backend
-
-- Future **AgnosticRagMCP** support
-  - Google Drive tools
-  - WhatsApp tools
-  - Telegram tools
-  - MCP server integration
-  - External AI tool orchestration
+- **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
+- **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
+- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking), Images and Audio (Speech)
+- **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
+- Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+- Supports multimodal queries: **text, image, audio, text+image, text+audio**  
+- **Audio Search** using Whisper + CLAP with Qdrant
+- **Audio Query Support** search by uploaded audio file or text
+- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings
+- **Built-in caching system**:
+  - In-memory **engine cache** (avoid reloading heavy models)
+  - Optional **media/query result cache** for image & audio queries
+  - Configurable cache limits and TTL for performance tuning
+- **Docker-based modular deployment**:  (Comming Soon)
+  - run separate RAG backends per modality (text / image / audio)
+  - each backend connected to its own collection or configuration
+  - UI can dynamically select the target backend (e.g., text, image, audio, router)
+  - enables scalable, isolated, and production-ready deployments    
+- **Simple UI for quick testing** that uses the Core API / AgnosticRagRouter as its backend
+- Future **AgnosticRagMCP** support for MCP server tools integration (Google Drive, WhatsApp, Telegram, external AI tools)
 
 ---
 
