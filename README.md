@@ -61,8 +61,9 @@ Future support for `AgnosticRagMCP` extends the platform with MCP-based external
 ## ✨ Key Highlights
 
 - **Core RAG API** built with a clean, extensible architecture
-- **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
 - **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
+- **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
+- **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds) 
 - **Pluggable LLM providers** (local and remote) 
 - **Horisontal Scalable** (cloud / on-prem)
 - **Redis based** Conversation history (app_id / user_id / session_id)  
@@ -201,7 +202,133 @@ Qdrant
 }
 ```
 ---
+- **Config-Driven AgnosticRagRouter** `router_settings.json` (routing, backends, prompts, retries, thresholds)
 
+```json
+{
+  "router_provider": "openai",
+  "router_model": "gpt-4o-mini",
+  "router_temperature": 0.0,
+  "router_prompt": "You are a routing agent. Choose the best RAG backend for the user query.",
+  "routing_mode": "rules_then_llm",
+  "fallback_backend": "eyad_asil",
+  "allow_multi_backend": false,
+  "confidence_threshold": 0.6,
+  "llm_call_timeout_seconds": 60.0,
+  "llm_call_retries": 1,
+  "backend_call_timeout_seconds": 180.0,
+  "backend_call_retries": 1,
+  "env_path": "keys.env",
+  "transformer_device": "cuda",
+  "transformer_trust_remote_code": true,
+  "transformer_local_files_only": false,
+  "transformer_chat_backend": "",
+  "transformer_chat_model_path": "",
+  "transformer_chat_prompt": "{joined}",
+  "transformer_max_new_tokens": 256,
+  "transformer_temperature": 0.0,
+  "transformer_top_p": 0.9,
+  "transformer_do_sample": false,
+  "transformer_system_prompt": "",
+  "transformer_max_input_length": 2048,
+  "openai_api_key": "",
+  "gemini_api_key": "",
+  "backends": [
+    {
+      "name": "medical_csv",
+      "title": "Medical CSV RAG",
+      "url": "http://localhost:8002",
+      "query_path": "/query",
+      "index_path": "/index/build",
+      "description": "Use for medical CSV questions, claims, claim denial codes, diseases, treatments, medicines, patient/insurance/medical table lookups.",
+      "source_type": "csv",
+      "docs_dir": "rag_data/my_csvs/docs",
+      "source_files": [
+        "claims_300.csv"
+      ],
+      "collection_prefix": "medical_csv",
+      "enabled": true,
+      "rules": {
+        "keywords_any": [
+          "medical",
+          "medicine",
+          "doctor",
+          "disease",
+          "treatment",
+          "drug",
+          "medicine",
+          "patient",
+          "claim",
+          "claims",
+          "denial",
+          "denialcode",
+          "insurance",
+          "سكري",
+          "ضغط",
+          "مرض",
+          "علاج",
+          "دواء",
+          "طبي",
+          "مطالبة",
+          "تأمين"
+        ]
+      },
+      "query_stream_path": "/query_stream"
+    },
+    {
+      "name": "eyad_asil",
+      "title": "Eyad Asil TXT RAG",
+      "url": "http://localhost:8001",
+      "query_path": "/query",
+      "index_path": "/index/build",
+      "description": "Use for questions about Eyad, Asil, family/private TXT knowledge, children info, personal notes in Asil_Eyad.txt.",
+      "source_type": "txt",
+      "docs_dir": "rag_data/my_csvs/docs",
+      "source_files": [
+        "Asil_Eyad.txt"
+      ],
+      "collection_prefix": "eyad_asil",
+      "enabled": true,
+      "rules": {
+        "keywords_any": [
+          "eyad",
+          "asil",
+          "إياد",
+          "اياد",
+          "أسيل",
+          "اسيل",
+          "لجين",
+          "lujain",
+          "family",
+          "child",
+          "children",
+          "عائلة",
+          "طفل",
+          "أطفال"
+        ]
+      },
+      "query_stream_path": "/query_stream"
+    }
+  ],
+  "routing_function_schema": "{\n  \"function\": \"query_<backend_name>_rag\",\n  \"arguments\": {\"query\": \"original user query\"},\n  \"backend_name\": \"backend_name\",\n  \"confidence\": 0.0,\n  \"reason\": \"short reason\"\n}",
+  "routing_rules_prompt": "- Choose medical_csv for medical CSV claims, denial codes, patient/insurance/medical table questions.\n- Choose eyad_asil for Eyad/Asil/private TXT family information.\n- If uncertain, choose the closest backend with low confidence.\n- Keep the original user query unchanged in arguments.query.",
+  "routing_prompt_template": "{router_prompt}\n\nYou are routing a user query to exactly one AgnosticRAG backend.\nReturn ONLY valid JSON. Do not use markdown. Do not add explanations outside JSON.\n\nAvailable tools/functions:\n{backend_tools}\n\nAvailable backend descriptions:\n{backend_descriptions}\n\nRequired JSON schema:\n{function_schema}\n\nRules:\n{routing_rules}\n\nUser query:\n{query}\n",
+  "stream_media_type": "text/event-stream",
+  "cors_allowed_origins": [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200"
+  ],
+  "cors_allowed_methods": [
+    "GET",
+    "POST",
+    "OPTIONS"
+  ],
+  "cors_allowed_headers": [
+    "*"
+  ]
+}
+```
+---
 ## 🧠 Architecture Overview
 
 ```
