@@ -5,6 +5,7 @@ AgnosticRag-Q is a cloud agnostic and LLM agnostic **Retrieval-Augmented Generat
 It provides:
 - a **Core RAG API**
 - an intelligent routing layer (**AgnosticRagRouter**)
+- an MCP integration layer (**AgnosticRagMCP**)
 - and a **GUI application** that consumes these backends
 
 allowing you to experiment, extend, and deploy scalable multi-backend RAG pipelines with multiple LLM providers and data sources.
@@ -15,7 +16,7 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 
 The platform is designed for **modular deployment**, where multiple RAG backends can run independently (text, image, audio, CSV, domain-specific collections), while the router dynamically dispatches user queries to the best backend.
 
-Future support for `AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Google Drive, WhatsApp, Telegram, and custom enterprise connectors.
+`AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Telegram, WhatsApp, Google Drive, and custom enterprise connectors/drivers, enabling external systems and messaging platforms to communicate directly with AgnosticRagRouter and the RAG backends.
 
 <table>
   <tr>
@@ -60,23 +61,34 @@ Future support for `AgnosticRagMCP` extends the platform with MCP-based external
   </a>
     </td>
   </tr>  
+    <tr>
+    <td align="center">
+      <b>AgnosticRagMCP Telegram</b><br>
+  <a href="https://www.youtube.com/watch?v=ZF_NdOJTzfo">
+    <img src="https://img.youtube.com/vi/ZF_NdOJTzfo/maxresdefault.jpg" width="800">
+  </a>
+    </td>    
+    <td align="center">
+    </td>
+  </tr> 
 </table>
 
 ## ✨ Key Highlights
 
-- **Core RAG API** built with a clean, extensible architecture
+- **Core Multi-Modal RAG API** built with a clean, extensible architecture
 - **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
 - **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
-- **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds) 
+- **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds)
+- **AgnosticRagMCP** MCP-based external integrations layer (Telegram, WhatsApp, Google Drive, external enterprise tools & drivers)
 - **Pluggable LLM providers** (local and remote) 
 - **Horisontal Scalable** (cloud / on-prem)
 - **Redis based** Conversation history (app_id / user_id / session_id)  
 - **Qdrant-based vector search** with multiple data source options
 - **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
 - **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV(Tables) (Fields Extracts) , TXT (Paragraph-based chunking), Images and Audio (Speech)
+- **Flexible Ingestion** CSV(table field extraction) , TXT (Paragraph-based chunking), PDF, Images and Audio (Speech)
 - **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
-- Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image search
+- Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image retrieval
 - Supports multimodal queries: **text, image, audio, text+image, text+audio**  
 - **Audio Search** using Whisper + CLAP with Qdrant
 - **Audio Query Support** search by uploaded audio file or text
@@ -85,13 +97,13 @@ Future support for `AgnosticRagMCP` extends the platform with MCP-based external
   - In-memory **engine cache** (avoid reloading heavy models)
   - Optional **media/query result cache** for image & audio queries
   - Configurable cache limits and TTL for performance tuning
-- **Docker-based modular deployment**:  (Comming Soon)
-  - run separate RAG backends per modality (text / image / audio)
+- **Docker-based modular deployment**:
+  - run separate RAG backends per modality (text / image / audio / CSV)
   - each backend connected to its own collection or configuration
+  - Router dynamically dispatches queries to the best backend
   - UI can dynamically select the target backend (e.g., text, image, audio, router)
-  - enables scalable, isolated, and production-ready deployments    
+  - scalable, isolated, and production-ready architecture    
 - **Simple UI for quick testing** that uses the Core API / AgnosticRagRouter as its backend
-- Future **AgnosticRagMCP** support for MCP server tools integration (Google Drive, WhatsApp, Telegram, external AI tools)
 
 ---
 
@@ -338,20 +350,28 @@ Qdrant
 ```
 GUI (Web / Desktop)
    ↓
+AgnosticRagMCP (Optional)
+   ├── Telegram
+   ├── WhatsApp
+   ├── Google Drive
+   └── External Tools / Drivers
+   ↓
 AgnosticRagRouter (Optional)
    ↓
 Core RAG API (FastAPI)
    ↓
 RAG Engine
-   ├── LLM Providers (Transformers, vLLM, Ollama, OpenAI, ...)
+   ├── LLM Providers (Transformers, vLLM(Later), Ollama, OpenAI, Gemini, ...)
    ├── Vector Store (Qdrant)
    └── Data Sources (Txt, CSV, Images, Audio(Speech))
 ```
 
-- **Core API**: Handles retrieval, prompt construction, history, and inference.
+- **Core API**: Handles retrieval, embeddings, prompt construction, history, reranking, caching, and inference.
 - **AgnosticRagRouter**: Intelligent LLM-based routing and multi-backend orchestration.
-- **GUI**: Thin client that communicates only with the Core API to generate the config file ( helful for developers).
-- **LLM Providers**: Swappable components selected via configuration.
+- **AgnosticRagMCP**: MCP-based integrations layer for Telegram, WhatsApp, Google Drive, enterprise connectors, and external AI tools/drivers.
+- **GUI (Desktop/Web)**: Thin client that communicates with the Core API or Router for quick testing and configuration generation.
+- **LLM Providers**: Swappable providers selected dynamically through configuration.
+- **Qdrant**: Hybrid vector database for dense, sparse, multimodal, and multivector retrieval.
   
 ---
 
@@ -361,20 +381,23 @@ The Core API is responsible for:
 
 - Query understanding
 - Context retrieval from Qdrant
+- Hybrid search (Dense + BM25)
 - Prompt construction
 - LLM inference
 - Conversation history management
+- Query rewriting and reranking
+- Multi-modal retrieval (text, image, audio)
 
 It can be used:
-- Directly as an API (FastAPI)
-- As a backend for the provided GUI
-- As a base for custom applications
+- Directly as a FastAPI backend
+- As a backend for the provided GUI applications
+- As a foundation for custom enterprise applications
+- As a scalable backend for multi-RAG deployments
 
 ---
-
 ## 🧠 AgnosticRagRouter
 
-AgnosticRagRouter is an intelligent routing layer for multi-backend RAG systems.
+`AgnosticRagRouter` is an intelligent routing layer for multi-backend RAG systems.
 
 It is responsible for:
 
@@ -382,14 +405,46 @@ It is responsible for:
 - Query routing across multiple RAG backends
 - Multi-domain orchestration
 - Dynamic backend dispatching
+- Agentic-AI style routing workflows
+- Configurable routing strategies and retry logic
 
 Example:
 - Text RAG backend
-- CSV / Medical backend
+- CSV / Medical RAG backend
 - Image RAG backend
-- Audio RAG backend
+- Audio / Speech RAG backend
 
 The router can automatically select the most relevant backend depending on the user query.
+
+---
+## 🔌 AgnosticRagMCP
+
+`AgnosticRagMCP` is an MCP-based external integrations layer.
+
+It enables external systems and messaging platforms to communicate with AgnosticRagRouter and the Core RAG APIs.
+
+Supported / planned integrations:
+
+- Telegram Bots
+- WhatsApp Bots
+- Google Drive tools
+- Enterprise connectors & drivers
+- External AI tools
+- MCP orchestration workflows
+
+Example flow:
+
+Telegram / WhatsApp User
+        ↓
+AgnosticRagMCP
+        ↓
+AgnosticRagRouter
+        ↓
+Selected RAG Backend
+        ↓
+Qdrant Search + LLM
+        ↓
+Reply to User
 
 ---
 
@@ -400,6 +455,8 @@ The GUI is built on top of the Core API and provides:
 - Interactive chat interface
 - History-aware conversations
 - Easy switching between RAG configurations
+- Runtime configuration generation
+- Multi-backend testing support
 
 The GUI **does not contain RAG logic**; it strictly consumes the Core API, this will help admin and developers to setup the deployment configuration quickly.
 
@@ -413,9 +470,17 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API, this 
 - **Transformer** (local)
 - **OpenAI** (remote)
 - **Gemini** (remote)
-- **ColPali** (image)
-- **ColQwen** (remote)
-- **Whisper** (local)
+- **ColPali** (multivector image retrieval) (local)
+- **ColQwen** (multivector image retrieval) (local)
+- **Whisper** (speech/audio transcription) (local)
+
+### Embedding / Retrieval Support
+- Dense embeddings
+- BM25 sparse embeddings
+- Hybrid search
+- Multi-vector retrieval
+- CLAP audio embeddings
+- Muvera FDE acceleration for image retrieval
 
 ---
 
@@ -602,7 +667,10 @@ POST http://localhost:8000/query
 #### Swagger
 
 ![Swagger](images/Swagger.PNG)
+---
+#### Telegram
 
+![Telegram](images/AgnosticRagMCP_Telegram.PNG)
 ---
 
 ## 📄 License
