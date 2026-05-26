@@ -16,7 +16,7 @@ The project is intentionally **provider-agnostic**, making it easy to switch bet
 
 The platform is designed for **modular deployment**, where multiple RAG backends can run independently (text, image, audio, CSV, domain-specific collections), while the router dynamically dispatches user queries to the best backend.
 
-`AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Telegram, WhatsApp, Google Drive, and custom enterprise connectors/drivers, enabling external systems and messaging platforms to communicate directly with AgnosticRagRouter and the RAG backends.
+`AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Telegram, WhatsApp, MS Teams, Google Drive, and custom enterprise connectors/drivers, enabling external systems and messaging platforms to communicate directly with AgnosticRagRouter and the RAG backends.
 
 <table>
   <tr>
@@ -79,7 +79,7 @@ The platform is designed for **modular deployment**, where multiple RAG backends
 - **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
 - **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
 - **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds)
-- **AgnosticRagMCP** MCP-based external integrations layer (Telegram, WhatsApp, Google Drive, external enterprise tools & drivers)
+- **AgnosticRagMCP** MCP-based external integrations layer (Telegram, WhatsApp, MS Teams, Google Drive, external enterprise tools & drivers)
 - **Pluggable LLM providers** (local and remote) 
 - **Horisontal Scalable** (cloud / on-prem)
 - **Redis based** Conversation history (app_id / user_id / session_id)  
@@ -353,6 +353,7 @@ GUI (Web / Desktop)
 AgnosticRagMCP (Optional)
    ├── Telegram
    ├── WhatsApp
+   ├── MS Teams
    ├── Google Drive
    └── External Tools / Drivers
    ↓
@@ -368,7 +369,7 @@ RAG Engine
 
 - **Core API**: Handles retrieval, embeddings, prompt construction, history, reranking, caching, and inference.
 - **AgnosticRagRouter**: Intelligent LLM-based routing and multi-backend orchestration.
-- **AgnosticRagMCP**: MCP-based integrations layer for Telegram, WhatsApp, Google Drive, enterprise connectors, and external AI tools/drivers.
+- **AgnosticRagMCP**: MCP-based integrations layer for Telegram, WhatsApp, MS Teams, Google Drive, enterprise connectors, and external AI tools/drivers.
 - **GUI (Desktop/Web)**: Thin client that communicates with the Core API or Router for quick testing and configuration generation.
 - **LLM Providers**: Swappable providers selected dynamically through configuration.
 - **Qdrant**: Hybrid vector database for dense, sparse, multimodal, and multivector retrieval.
@@ -427,6 +428,7 @@ Supported / planned integrations:
 
 - Telegram Bots
 - WhatsApp Bots
+- MS Teams Bots
 - Google Drive tools
 - Enterprise connectors & drivers
 - External AI tools
@@ -434,7 +436,7 @@ Supported / planned integrations:
 
 Example flow:
 
-Telegram / WhatsApp User
+Telegram / WhatsApp / MS Teams User
         ↓
 AgnosticRagMCP
         ↓
