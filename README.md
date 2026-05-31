@@ -69,6 +69,10 @@ The platform is designed for **modular deployment**, where multiple RAG backends
   </a>
     </td>    
     <td align="center">
+            <b>AgnosticRagMCP MS Teams</b><br>
+  <a href="https://www.youtube.com/watch?v=WLbRCGKRDdo">
+    <img src="https://img.youtube.com/vi/WLbRCGKRDdo/maxresdefault.jpg" width="800">
+  </a>
     </td>
   </tr> 
 </table>
