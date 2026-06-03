@@ -89,6 +89,7 @@ The platform is designed for **modular deployment**, where multiple RAG backends
 - **Redis based** Conversation history (app_id / user_id / session_id)  
 - **Qdrant-based vector search** with multiple data source options
 - **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
+- **GraphRAG** using **Qdrant + Neo4j** for hybrid semantic and relationship-based retrieval
 - **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
 - **Flexible Ingestion** CSV(table field extraction) , TXT (Paragraph-based chunking), PDF, Images and Audio (Speech)
 - **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
