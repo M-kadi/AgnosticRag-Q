@@ -6,6 +6,7 @@ It provides:
 - a **Core RAG API**
 - an intelligent routing layer (**AgnosticRagRouter**)
 - an MCP integration layer (**AgnosticRagMCP**)
+- A GraphRAG layer combining Qdrant vector search and Neo4j knowledge graphs
 - and a **GUI application** that consumes these backends
 
 allowing you to experiment, extend, and deploy scalable multi-backend RAG pipelines with multiple LLM providers and data sources.
