@@ -96,7 +96,7 @@ The platform is designed for **modular deployment**, where multiple RAG backends
 - **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image retrieval
 - Supports multimodal queries: **text, image, audio, text+image, text+audio**  
-- **Audio Search** using Whisper + CLAP with Qdrant
+- **Audio Search** using Whisper + CLAP with Qdrant/Neo4j
 - **Audio Query Support** search by uploaded audio file or text
 - **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings
 - **Built-in caching system**:
@@ -127,6 +127,28 @@ Embedding
    ↓
 Qdrant
 ```
+
+- **Rewrite Prompt + GraphRAG Retrieval**
+```bash
+User query
+   ↓
+Load last N Redis turns (e.g., 2–3)
+   ↓
+Rewrite LLM
+   ↓
+Rewritten query
+   ↓
+Embedding
+   ↓
+Qdrant Semantic Search
+   ↓
+(Optional) Neo4j Graph Search
+   ↓
+Merge Semantic + Graph Results
+   ↓
+LLM Answer
+```
+
 ---
 - **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
 ```bash
@@ -135,6 +157,8 @@ Qdrant
   "qdrant_url": "http://localhost:6333",
   "collection_prefix": "ManyImages-",
   "collection_name": "ManyImages-__vidore_colpali-v1.3__multivector_image__dim128__muvera",
+  "enable_neo4j_with_qdrant": false,
+  "graph_store_provider": "neo4j",  
   "topk_retrieve": 10,
   "topk_use": 5,
   "enable_rerank": false,
@@ -370,15 +394,17 @@ Core RAG API (FastAPI)
 RAG Engine
    ├── LLM Providers (Transformers, vLLM(Later), Ollama, OpenAI, Gemini, ...)
    ├── Vector Store (Qdrant)
+   ├── Graph Store (Neo4j)   
    └── Data Sources (Txt, CSV, Images, Audio(Speech))
 ```
 
-- **Core API**: Handles retrieval, embeddings, prompt construction, history, reranking, caching, and inference.
+- **Core API**: Handles retrieval, embeddings, GraphRAG, prompt construction, history, reranking, caching, and inference..
 - **AgnosticRagRouter**: Intelligent LLM-based routing and multi-backend orchestration.
 - **AgnosticRagMCP**: MCP-based integrations layer for Telegram, WhatsApp, MS Teams, Google Drive, enterprise connectors, and external AI tools/drivers.
 - **GUI (Desktop/Web)**: Thin client that communicates with the Core API or Router for quick testing and configuration generation.
 - **LLM Providers**: Swappable providers selected dynamically through configuration.
 - **Qdrant**: Hybrid vector database for dense, sparse, multimodal, and multivector retrieval.
+- **Neo4j**: Knowledge graph database for entity relationships, GraphRAG retrieval, and multi-hop reasoning.
   
 ---
 
@@ -387,8 +413,9 @@ RAG Engine
 The Core API is responsible for:
 
 - Query understanding
-- Context retrieval from Qdrant
+- Context retrieval from Qdrant and Neo4j
 - Hybrid search (Dense + BM25)
+- GraphRAG retrieval and multi-hop reasoning
 - Prompt construction
 - LLM inference
 - Conversation history management
@@ -399,7 +426,7 @@ It can be used:
 - Directly as a FastAPI backend
 - As a backend for the provided GUI applications
 - As a foundation for custom enterprise applications
-- As a scalable backend for multi-RAG deployments
+- As a scalable backend for multi-RAG and GraphRAG deployments
 
 ---
 ## 🧠 AgnosticRagRouter
@@ -448,11 +475,15 @@ AgnosticRagMCP
         ↓
 AgnosticRagRouter
         ↓
-Selected RAG Backend
-        ↓
-Qdrant Search + LLM
-        ↓
-Reply to User
+Selected RAG Backend 
+        ↓ 
+Qdrant Search + Neo4j Graph Search 
+        ↓ 
+Merge Semantic + Graph Context 
+        ↓ 
+       LLM 
+        ↓ 
+  Reply to User
 
 ---
 
@@ -510,12 +541,21 @@ The GUI **does not contain RAG logic**; it strictly consumes the Core API, this 
 ## 📦 Vector Store
 
 - **Qdrant** is used as the primary vector database
+- **Neo4j** is used as the knowledge graph database for GraphRAG
+
 - Supports:
+**Qdrant**
   - Dense vector search
   - Metadata filtering
   - Multi-collection setups
   - Qdrant-Hybrid search : BM25 (sparse) + Dense embeddings
 
+**Neo4j**
+  - Entity and relationship storage
+  - Graph traversal and relationship discovery
+  - Multi-hop retrieval
+  - GraphRAG context enrichment
+  - Relationship-aware search
 ---
 
 ## 🛠️ Configuration
@@ -550,6 +590,7 @@ docker compose down
 
 - **Swagger UI**: http://localhost:8000/docs
 - **Qdrant Dashboard**: http://localhost:6333/dashboard
+- **Neo4j Browser**: http://localhost:7474/browser/
 - **RedisInsight**: http://localhost:5540/
 
 ---
