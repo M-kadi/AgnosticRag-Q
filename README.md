@@ -75,7 +75,18 @@ The platform is designed for **modular deployment**, where multiple RAG backends
     <img src="https://img.youtube.com/vi/WLbRCGKRDdo/maxresdefault.jpg" width="800">
   </a>
     </td>
+  </tr>
+      <tr>
+    <td align="center">
+      <b>GraphRAG using Qdrant + Neo4j</b><br>
+  <a href="https://www.youtube.com/watch?v=dbYoXbP0LSg">
+    <img src="https://img.youtube.com/vi/dbYoXbP0LSg/maxresdefault.jpg" width="800">
+  </a>
+    </td>    
+    <td align="center">
+    </td>
   </tr> 
+
 </table>
 
 ## ✨ Key Highlights
