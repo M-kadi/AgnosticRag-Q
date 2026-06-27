@@ -84,9 +84,12 @@ The platform is designed for **modular deployment**, where multiple RAG backends
   </a>
     </td>    
     <td align="center">
+      <b>Full Example : Txt, CSV, Image, Audio and Graph</b><br>
+  <a href="https://www.youtube.com/watch?v=_LZ2YVS9wwI">
+    <img src="images/full_example_thumbnail.png" width="800">
+  </a>
     </td>
   </tr> 
-
 </table>
 
 ## ✨ Key Highlights
