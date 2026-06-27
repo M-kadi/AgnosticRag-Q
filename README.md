@@ -1,23 +1,24 @@
 # AgnosticRag-Q
 
-AgnosticRag-Q is a cloud agnostic and LLM agnostic **Retrieval-Augmented Generation (RAG) platform** designed with a clean architecture, supporting Text, CSV, Images, and Audio with hybrid search, multimodal retrieval, intelligent routing, and configurable runtime behavior.
+**AgnosticRag-Q** is a cloud agnostic and LLM agnostic **Agentic AI & Retrieval-Augmented Generation (RAG) platform** built with a clean, modular architecture. It supports Text, CSV, Images, Audio, enterprise applications such as **Odoo**, hybrid search, multimodal retrieval, intelligent routing, and configurable runtime behavior.
 
 It provides:
 - a **Core RAG API**
 - an intelligent routing layer (**AgnosticRagRouter**)
 - an MCP integration layer (**AgnosticRagMCP**)
+- enterprise application integration (Odoo, PostgreSQL, and custom MCP services)
 - A GraphRAG layer combining Qdrant vector search and Neo4j knowledge graphs
 - and a **GUI application** that consumes these backends
 
-allowing you to experiment, extend, and deploy scalable multi-backend RAG pipelines with multiple LLM providers and data sources.
+allowing you to build, extend, and deploy scalable multi-backend AI systems that combine private knowledge bases, enterprise applications, and multiple LLM providers.
 
-The project is intentionally **provider-agnostic**, making it easy to switch between LLM backends, vector stores, embedding providers, and retrieval strategies without rewriting business logic.
+The project is intentionally **provider-agnostic**, making it easy to switch between LLM providers, embedding models, vector stores, enterprise connectors, and retrieval strategies without changing business logic.
 
-`AgnosticRagRouter` introduces an Agentic-AI style orchestration layer that automatically selects the most relevant backend/collection (TXT, CSV, image, audio, medical, etc.) using LLM-based routing and configurable routing strategies.
+`AgnosticRagRouter` introduces an Agentic AI orchestration layer that automatically selects the most appropriate backend or enterprise service for each request. Depending on the query, it can route to document collections (TXT, CSV, Images, Audio), GraphRAG, Odoo ERP, PostgreSQL, or any custom MCP service using configurable routing strategies and LLM-assisted decision making.
 
-The platform is designed for **modular deployment**, where multiple RAG backends can run independently (text, image, audio, CSV, domain-specific collections), while the router dynamically dispatches user queries to the best backend.
+The platform is designed for **modular deployment**, where multiple RAG backends and enterprise services run independently. Dedicated services can be deployed for text, images, audio, domain-specific knowledge, Odoo ERP, databases, and custom business systems, while the router dynamically dispatches requests to the most relevant destination.
 
-`AgnosticRagMCP` extends the platform with MCP-based external tools integration such as Telegram, WhatsApp, MS Teams, Google Drive, and custom enterprise connectors/drivers, enabling external systems and messaging platforms to communicate directly with AgnosticRagRouter and the RAG backends.
+`AgnosticRagMCP` extends the platform through the **Model Context Protocol (MCP)**, enabling seamless integration with external applications, enterprise systems, and communication channels. It supports connectors such as Telegram, WhatsApp, Microsoft Teams, Odoo, PostgreSQL, Google Drive, and custom enterprise MCP servers, allowing users and business applications to interact with both RAG knowledge bases and enterprise systems through a unified AI interface.
 
 <table>
   <tr>
@@ -95,11 +96,14 @@ The platform is designed for **modular deployment**, where multiple RAG backends
 ## ✨ Key Highlights
 
 - **Core Multi-Modal RAG API** built with a clean, extensible architecture
-- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts)
+- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts), `graph_rag_settings.json` (allowed relation types, graph extraction prompts, 
+             entity/relation rules)
 - **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
 - **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds)
-- **AgnosticRagMCP** MCP-based external integrations layer (Telegram, WhatsApp, MS Teams, Google Drive, external enterprise tools & drivers)
-- **Pluggable LLM providers** (local and remote) 
+- **AgnosticRagMCP** MCP-based external integrations layer (Odoo, PostgreSQL, Telegram, WhatsApp, MS Teams, Google Drive, external enterprise tools & drivers)
+- **Config-Driven AgnosticRagMCP** `mcp_settings.json` (whatsapp, telegram, microsoft_teams)
+- **Enterprise AI integration** with business systems such as Odoo ERP, PostgreSQL, and custom MCP services
+- **Pluggable LLM providers** (local and remote) : (OpenAI, Gemini, Ollama, Hugging Face Transformers, and local models)
 - **Horisontal Scalable** (cloud / on-prem)
 - **Redis based** Conversation history (app_id / user_id / session_id)  
 - **Qdrant-based vector search** with multiple data source options
