@@ -1,24 +1,26 @@
 # AgnosticRag-Q
 
-**AgnosticRag-Q** is a cloud agnostic and LLM agnostic **Agentic AI & Retrieval-Augmented Generation (RAG) platform** built with a clean, modular architecture. It supports Text, CSV, Images, Audio, enterprise applications such as **Odoo**, hybrid search, multimodal retrieval, intelligent routing, and configurable runtime behavior.
+**AgnosticRag-Q** is a cloud-agnostic and LLM-agnostic **Agentic AI, RAG & GraphRAG platform** for building intelligent search engines, enterprise AI assistants, and multimodal knowledge systems.
 
-It provides:
-- a **Core RAG API**
-- an intelligent routing layer (**AgnosticRagRouter**)
-- an MCP integration layer (**AgnosticRagMCP**)
-- enterprise application integration (Odoo, PostgreSQL, and custom MCP services)
-- A GraphRAG layer combining Qdrant vector search and Neo4j knowledge graphs
-- and a **GUI application** that consumes these backends
+It supports **TXT, CSV, PDF, Images, Audio, OCR, databases, and enterprise applications**, combining **Qdrant vector search, BM25 hybrid search, Neo4j knowledge graphs, multimodal retrieval, reranking, and intelligent routing**.
 
-allowing you to build, extend, and deploy scalable multi-backend AI systems that combine private knowledge bases, enterprise applications, and multiple LLM providers.
+`AgnosticRagRouter` provides an **Agentic AI orchestration layer** that analyzes each query and dynamically routes it to the appropriate RAG backend, GraphRAG knowledge base, Odoo ERP, PostgreSQL database, or custom MCP service. Multiple backends can also work together and merge their results into one final answer.
 
-The project is intentionally **provider-agnostic**, making it easy to switch between LLM providers, embedding models, vector stores, enterprise connectors, and retrieval strategies without changing business logic.
+The **GraphRAG** layer combines Qdrant semantic retrieval with Neo4j entities and relationships. It supports **Simple, Simple Entity, Complex, Complex Broad, and Adaptive Hybrid** query strategies for entity search, relationship discovery, multi-hop reasoning, and broader knowledge exploration.
 
-`AgnosticRagRouter` introduces an Agentic AI orchestration layer that automatically selects the most appropriate backend or enterprise service for each request. Depending on the query, it can route to document collections (TXT, CSV, Images, Audio), GraphRAG, Odoo ERP, PostgreSQL, or any custom MCP service using configurable routing strategies and LLM-assisted decision making.
+The platform provides advanced document ingestion for **PDF text, tables, images, and OCR**, including page-aware extraction and retrieval of original source images associated with answers.
 
-The platform is designed for **modular deployment**, where multiple RAG backends and enterprise services run independently. Dedicated services can be deployed for text, images, audio, domain-specific knowledge, Odoo ERP, databases, and custom business systems, while the router dynamically dispatches requests to the most relevant destination.
+A built-in **Simple Web Chatbot** provides an easy way for users to interact with the platform without dealing directly with APIs. It supports **streaming answers, conversation history, suggested questions, source files/images, backend/profile selection, multilingual interfaces, and RTL/LTR layouts**.
 
-`AgnosticRagMCP` extends the platform through the **Model Context Protocol (MCP)**, enabling seamless integration with external applications, enterprise systems, and communication channels. It supports connectors such as Telegram, WhatsApp, Microsoft Teams, Odoo, PostgreSQL, Google Drive, and custom enterprise MCP servers, allowing users and business applications to interact with both RAG knowledge bases and enterprise systems through a unified AI interface.
+It also includes **conversation-aware query rewriting, Redis conversation history, source-aware answers, backend profiles, per-user/session configuration, retries, caching, debugging, and stage-performance timing**.
+
+`AgnosticRagMCP` extends the platform through the **Model Context Protocol (MCP)**, connecting RAG knowledge bases with **Odoo, PostgreSQL, Google Drive, Telegram, WhatsApp, Microsoft Teams, and custom enterprise services**.
+
+The platform is highly **configuration-driven**: LLMs, embedding models, prompts, retrieval strategies, GraphRAG behavior, routing, chunking, reranking, and backend settings can be changed without modifying the main business logic.
+
+It supports **OpenAI, Google Gemini, Ollama, Hugging Face/local models**, with modular deployment through **Docker, on-premises infrastructure, or cloud environments**.
+
+The result is a flexible platform where **private documents, knowledge graphs, multimodal data, databases, enterprise applications, and simple conversational AI interfaces work together behind one unified Agentic AI platform**.
 
 <table>
   <tr>
