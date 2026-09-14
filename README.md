@@ -1,12 +1,14 @@
 # AgnosticRag-Q
 
-**AgnosticRag-Q** is a cloud-agnostic and LLM-agnostic **Agentic AI, RAG & GraphRAG platform** for building intelligent search engines, enterprise AI assistants, and multimodal knowledge systems.
+**AgnosticRag-Q** is a cloud-agnostic and LLM-agnostic **Agentic AI, RAG, GraphRAG & RagSQL platform** for building intelligent search engines, enterprise AI assistants, multimodal knowledge systems, and natural-language database applications.
 
 It supports **TXT, CSV, PDF, Images, Audio, OCR, databases, and enterprise applications**, combining **Qdrant vector search, BM25 hybrid search, Neo4j knowledge graphs, multimodal retrieval, reranking, and intelligent routing**.
 
-`AgnosticRagRouter` provides an **Agentic AI orchestration layer** that analyzes each query and dynamically routes it to the appropriate RAG backend, GraphRAG knowledge base, Odoo ERP, PostgreSQL database, or custom MCP service. Multiple backends can also work together and merge their results into one final answer.
+`AgnosticRagRouter` provides an **Agentic AI orchestration layer** that analyzes each query and dynamically routes it to the appropriate RAG backend, GraphRAG knowledge base, RagSQL database service, Odoo ERP, PostgreSQL database, or custom MCP service. Multiple backends can also work together and merge their results into one final answer.
 
 The **GraphRAG** layer combines Qdrant semantic retrieval with Neo4j entities and relationships. It supports **Simple, Simple Entity, Complex, Complex Broad, and Adaptive Hybrid** query strategies for entity search, relationship discovery, multi-hop reasoning, and broader knowledge exploration.
+
+**RagSQL** enables **natural-language querying of databases**, including large database schemas. For large databases, it uses **GraphRAG (Qdrant + Neo4j)** to retrieve the relevant tables, columns, and relationships instead of sending the entire database schema to the LLM. The optimized schema context is then sent to the LLM to generate SQL, validated with **SQLGlot**, and executed through **SQLAlchemy or MCP**.
 
 The platform provides advanced document ingestion for **PDF text, tables, images, and OCR**, including page-aware extraction and retrieval of original source images associated with answers.
 
@@ -16,11 +18,11 @@ It also includes **conversation-aware query rewriting, Redis conversation histor
 
 `AgnosticRagMCP` extends the platform through the **Model Context Protocol (MCP)**, connecting RAG knowledge bases with **Odoo, PostgreSQL, Google Drive, Telegram, WhatsApp, Microsoft Teams, and custom enterprise services**.
 
-The platform is highly **configuration-driven**: LLMs, embedding models, prompts, retrieval strategies, GraphRAG behavior, routing, chunking, reranking, and backend settings can be changed without modifying the main business logic.
+The platform is highly **configuration-driven**: LLMs, embedding models, prompts, retrieval strategies, GraphRAG behavior, RagSQL, routing, chunking, reranking, and backend settings can be changed without modifying the main business logic.
 
 It supports **OpenAI, Google Gemini, Ollama, Hugging Face/local models**, with modular deployment through **Docker, on-premises infrastructure, or cloud environments**.
 
-The result is a flexible platform where **private documents, knowledge graphs, multimodal data, databases, enterprise applications, and simple conversational AI interfaces work together behind one unified Agentic AI platform**.
+The result is a flexible platform where **private documents, knowledge graphs, multimodal data, databases, enterprise applications, and conversational AI interfaces work together behind one unified Agentic AI platform**.
 
   ---
 #### Flow Chart : Simple
@@ -108,40 +110,47 @@ The result is a flexible platform where **private documents, knowledge graphs, m
 
 ## ✨ Key Highlights
 
-- **Core Multi-Modal RAG API** built with a clean, extensible architecture
-- **Config-Driven** `rag_settings.json` (models, rerank, chunking, prompts), `graph_rag_settings.json` (allowed relation types, graph extraction prompts, 
-             entity/relation rules)
+- **Core Multi-Modal RAG API** built with a clean, modular, and extensible architecture
+- **Config-Driven RAG** using `rag_settings.json` for models, embeddings, reranking, chunking, prompts, retrieval, and caching
+- **Config-Driven GraphRAG** using `graph_rag_settings.json` for Neo4j, graph extraction, entity/relation rules, query strategies, and prompts
 - **AgnosticRagRouter** intelligent LLM-based backend routing and multi-backend orchestration
-- **Config-Driven AgnosticRagRouter** `router_settings.json` (routing rules, backends, prompts, retries, thresholds)
-- **AgnosticRagMCP** MCP-based external integrations layer (Odoo, PostgreSQL, Telegram, WhatsApp, MS Teams, Google Drive, external enterprise tools & drivers)
-- **Config-Driven AgnosticRagMCP** `mcp_settings.json` (whatsapp, telegram, microsoft_teams)
-- **Enterprise AI integration** with business systems such as Odoo ERP, PostgreSQL, and custom MCP services
-- **Pluggable LLM providers** (local and remote) : (OpenAI, Gemini, Ollama, Hugging Face Transformers, and local models)
-- **Horisontal Scalable** (cloud / on-prem)
-- **Redis based** Conversation history (app_id / user_id / session_id)  
-- **Qdrant-based vector search** with multiple data source options
-- **Qdrant-Hybrid search** BM25 (sparse) + Dense embeddings
-- **GraphRAG** using **Qdrant + Neo4j** for hybrid semantic and relationship-based retrieval
-- **Rewrite Prompt** Create standalone retrieval query,from (Final Query + short history)
-- **Flexible Ingestion** CSV(table field extraction) , TXT (Paragraph-based chunking), PDF, Images and Audio (Speech)
-- **Multi-vector image/pdf retrieval** using **ColQwen / ColPali**
+- **Config-Driven AgnosticRagRouter** using `router_settings.json` for routing rules, backends, prompts, retries, and thresholds
+- **AgnosticRagMCP** MCP-based enterprise integrations for Odoo, PostgreSQL, Telegram, WhatsApp, Microsoft Teams, Google Drive, and custom services
+- **Config-Driven AgnosticRagMCP** using `mcp_settings.json` for external services, tools, and database profiles
+- **RagSQL / Text-to-SQL** for natural-language querying of PostgreSQL databases
+- **RagSQL for Large Databases** using **Qdrant + Neo4j** to retrieve only the relevant database schema before SQL generation
+- **RagSQL Direct & Schema-RAG Modes** with **MCP or SQLAlchemy** for schema extraction and SQL execution
+- **SQL Validation** using **SQLGlot** before database execution
+- **Database Profiles** for configurable database connections, schema providers, SQL executors, and RagSQL modes
+- **GraphRAG** using **Qdrant + Neo4j** for semantic retrieval, entities, relationships, and multi-hop reasoning
+- **Multiple GraphRAG Query Strategies** including Simple, Simple Entity, Complex, Complex Broad, Hybrid, and Adaptive
+- **Qdrant Vector Search** with configurable collections and embedding models
+- **Hybrid Search** combining **BM25 sparse + Dense vector embeddings**
+- **PDF Data Extraction** for **text, tables, images, and image OCR**
+- **Page-Aware PDF Retrieval** with page numbers and source references
+- **PDF Source Images** associated with answers can be retrieved and displayed to users
+- **Flexible Ingestion** for CSV, TXT, PDF, Images, Audio, OCR, and database schemas
+- **CSV Retrieval** with table/field-aware extraction
+- **TXT Retrieval** with paragraph-based chunking
+- **Multi-Vector Image/PDF Retrieval** using **ColQwen / ColPali**
 - Optional **Muvera Fixed-Dimensional Encoding (FDE)** for fast image retrieval
-- Supports multimodal queries: **text, image, audio, text+image, text+audio**  
+- **Multimodal Queries** supporting text, image, audio, text+image, and text+audio
 - **Audio Search** using Whisper + CLAP with Qdrant/Neo4j
-- **Audio Query Support** search by uploaded audio file or text
-- **Hybrid Audio Transcript Search** BM25 (sparse) + Dense embeddings
-- **Built-in caching system**:
-  - In-memory **engine cache** (avoid reloading heavy models)
-  - Optional **media/query result cache** for image & audio queries
-  - Configurable cache limits and TTL for performance tuning
-- **Docker-based modular deployment**:
-  - run separate RAG backends per modality (text / image / audio / CSV)
-  - each backend connected to its own collection or configuration
-  - Router dynamically dispatches queries to the best backend
-  - UI can dynamically select the target backend (e.g., text, image, audio, router)
-  - scalable, isolated, and production-ready architecture    
-- **Simple UI for quick testing** that uses the Core API / AgnosticRagRouter as its backend
-
+- **Audio Query Support** through uploaded audio files or text queries
+- **Hybrid Audio Transcript Search** using BM25 sparse + Dense embeddings
+- **Query Rewriting** creates a standalone retrieval query from the current query and conversation history
+- **Redis Conversation History** organized by `app_id / user_id / session_id`
+- **User & Backend Profiles** for per-user, per-session, Router, backend, MCP, and database configurations
+- **Source-Aware Answers** with source files, page numbers, images, and suggested questions
+- **Streaming Responses** for interactive RAG and chatbot experiences
+- **Built-in Caching** with engine/model cache and optional media/query result caching
+- **Performance Monitoring** with stage timing, logging, debugging, and request tracing
+- **Pluggable LLM Providers** including OpenAI, Gemini, Ollama, Hugging Face Transformers, and local models
+- **Cloud-Agnostic Deployment** supporting cloud and on-premises environments
+- **Horizontally Scalable Architecture** with independent RAG backends and services
+- **Docker-Based Modular Deployment** for text, image, audio, CSV, GraphRAG, RagSQL, Router, MCP, and UI services
+- **Simple Web Chatbot** with streaming, conversation history, sources, images, suggested questions, profiles, and multilingual support
+- **Simple Desktop GUI** for configuration, indexing, querying, testing, and backend/Router/RagSQL selection
 ---
 
 - **Rewrite Prompt**
