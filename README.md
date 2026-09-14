@@ -27,12 +27,12 @@ The result is a flexible platform where **private documents, knowledge graphs, m
   ---
 #### Flow Chart : Simple
 
-![Flow Chart : Simple](images/a_clean_infographic_flowchart_diagram_on_a_white_b_audio.png)
+![Flow Chart : Simple](images/AgnosticRag_flowchart_simple.png)
 
   ---
 #### Flow Chart : Details
 
-![Flow Chart : Details](images/a_bright_infographic_flowchart_style_system_archit.png)
+![Flow Chart : Details](images/AgnosticRag_flowchart_details.png)
 
   --- 
 <table>
