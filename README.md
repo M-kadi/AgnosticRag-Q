@@ -29,6 +29,11 @@ Its configuration-driven architecture enables customization of LLM providers, em
 Designed for **local, on-premises, and cloud deployment**, AgnosticRag-Q provides a modular foundation for building scalable, extensible, and enterprise-oriented AI solutions.
 
   ---
+#### AgnosticRag / WorkFlow
+
+![Flow Chart : Simple](images/AgnosticRag_WorkFlow)
+
+  ---
 #### Flow Chart : Simple
 
 ![Flow Chart : Simple](images/AgnosticRag_flowchart_simple.png)
