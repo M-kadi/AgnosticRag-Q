@@ -31,7 +31,7 @@ Designed for **local, on-premises, and cloud deployment**, AgnosticRag-Q provide
   ---
 #### AgnosticRag / WorkFlow
 
-![Flow Chart : Simple](images/AgnosticRag_WorkFlow)
+![Flow Chart : Simple](images/AgnosticRag_WorkFlow.png)
 
   ---
 #### Flow Chart : Simple
