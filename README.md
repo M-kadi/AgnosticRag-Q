@@ -47,6 +47,17 @@ Designed for **local, on-premises, and cloud deployment**, AgnosticRag-Q provide
 <table>
   <tr>
     <td align="center">
+      <b>WorkFlow</b><br>
+  <a href="https://www.youtube.com/watch?v=ZvgC3J916Vk">
+    <img src="https://img.youtube.com/vi/ZvgC3J916Vk/maxresdefault.jpg" width="400">
+      </a>
+    </td>
+
+  </tr>
+
+  
+  <tr>
+    <td align="center">
       <b>Full RAG with translation</b><br>
   <a href="https://www.youtube.com/watch?v=GIbtlLuHlyg">
     <img src="https://img.youtube.com/vi/GIbtlLuHlyg/maxresdefault.jpg" width="400">
